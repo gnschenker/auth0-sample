@@ -38,7 +38,7 @@ namespace api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -46,12 +46,6 @@ namespace api
             {
                 endpoints.MapControllers();
             });
-
-            AdditionalConfigure(app, env);
-        }
-
-        protected virtual void AdditionalConfigure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
         }
     }
 }

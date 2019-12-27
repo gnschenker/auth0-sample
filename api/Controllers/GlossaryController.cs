@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
@@ -27,7 +28,13 @@ namespace api.Controllers
                 Definition = "An open standard for authentication that allows applications to verify users are who they say they are without needing to collect, store, and therefore become liable for a user’s login information."
             }
         };
-        
+        private readonly ILogger logger;
+
+        public GlossaryController(ILogger<GlossaryController> logger)
+        {
+            this.logger = logger;
+        }
+
         [HttpGet]
         public ActionResult<List<GlossaryItem>> Get()
         {
@@ -44,7 +51,8 @@ namespace api.Controllers
             if (glossaryItem == null)
             {
                 return NotFound();
-            } else
+            } 
+            else
             {
                 return Ok(glossaryItem);
             }
@@ -52,7 +60,7 @@ namespace api.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult Post(GlossaryItem glossaryItem)
+        public ActionResult Post([FromBody]GlossaryItem glossaryItem)
         {
             var existingGlossaryItem = Glossary.Find(item =>
                     item.Term.Equals(glossaryItem.Term, StringComparison.InvariantCultureIgnoreCase));
@@ -71,7 +79,7 @@ namespace api.Controllers
 
         [HttpPut]
         [Authorize]
-        public ActionResult Put(GlossaryItem glossaryItem)
+        public ActionResult Put([FromBody]GlossaryItem glossaryItem)
         {
             var existingGlossaryItem = Glossary.Find(item =>
             item.Term.Equals(glossaryItem.Term, StringComparison.InvariantCultureIgnoreCase));
@@ -89,7 +97,7 @@ namespace api.Controllers
         [HttpDelete]
         [Route("{term}")]
         [Authorize]
-        public ActionResult Delete(string term)
+        public ActionResult Delete([FromRoute]string term)
         {
             var glossaryItem = Glossary.Find(item =>
                    item.Term.Equals(term, StringComparison.InvariantCultureIgnoreCase));

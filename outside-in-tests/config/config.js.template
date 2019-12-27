@@ -1,0 +1,12 @@
+// rename this file to `config.js` and fill in values for `<authority>`, `<client_id>`,
+// `<client_secret>` and `<audience>`.
+// You can get those values from your Auth0 account where you have defined the API
+module.exports = {
+
+    auth0 : {
+        url: '<authority>/oauth/token',     // URL to get a token from Auth0 for the API
+        client_id: '<client_id>',           // Client ID for the API
+        client_secret: '<client_secret>>',  // Client Secret for the API
+        audience: '<audience>'              // Audience for the API
+    }
+};

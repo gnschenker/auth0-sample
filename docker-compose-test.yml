@@ -1,0 +1,30 @@
+version: "2.4"
+services:
+    api:
+        image: acme.com/api:0.1
+        build:
+            context: api
+            dockerfile: Dockerfile-test
+        command: dotnet watch run
+        volumes:
+            - ./api:/app
+        healthcheck:
+            test: curl --fail localhost:5000/api/health
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 15s
+          
+    tests:
+        image: acme.com/api.tests:0.1
+        build:
+            context: outside-in-tests
+            dockerfile: Dockerfile
+        command: npm run watch
+        volumes:
+            - ./outside-in-tests:/app
+        environment:
+            API_HOST: api
+        depends_on:
+            api:
+                condition: service_healthy

@@ -45,6 +45,11 @@ $ dotnet user-secrets set "auth0:client_id" "<client-id>"
 $ dotnet user-secrets set "auth0:client_secret" "<client-secret>"
 $ dotnet user-secrets set "auth0:audience" "<audience>"
 --
++
+where 
+
+* `<url to token provider>` equals something like `https://<tenant>.auth0.com/oauth/token` and 
+* `<audience>` is the API Audience such as `https://glossary.acme.com`. It corresponds to the identifier you chose for the API during creation.
 
 == Getting a Token
 
@@ -107,3 +112,28 @@ curl --insecure --request DELETE \
     --header 'Authorization: Bearer <token>' \
     --url https://localhost:5001/api/glossary/<term>
 --
+
+== Running the XUnit Test
+
+Before continuing make sure you have defined User Secrets as described above.
+
+* To run Xunit based tests that use User Secrets to configure access to Auth0, use the following command:
++
+[source]
+--
+$ dotnet test tests
+--
+
+== Running Outside-In Tests
+
+* Navigate to the solution folder
+* Make sure to create a file `conf/conf.js` according to the `README.md` in the `conf` folder
+* Run the tests with:
++
+[source]
+--
+$ docker-compose -f docker-compose-test.yml up --build
+--
+
+* Whenever you change code in the API it will restart automatically
+* Whenever you change code in the Jasmine based test suite all tests will rerun automatically
