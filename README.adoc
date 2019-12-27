@@ -1,0 +1,109 @@
+= API Secured with Auth0
+
+== Create an Account on Auth0
+
+First you need an account on Auth0. You can create a free personal account here: https://auth0.com/signup.
+
+The login or *tenant* name you select during signup will determine the *Authority*. It looks like the following:
+
+* https://<tenant>.auth0.com
++
+or if you have selected EU as the data location it will be:
++
+https://<tenant>.eu.auth0.com
+
+Once logged in to Auth0:
+
+* Navigate to APIs
+* Click the button "+ CREATE API"
+* Enter the following data:
+** Friendly name, e.g. `Glossary API`
+** Identifier, e.g. `https://glossary.acme.com`
+** Leave Signing Algorith at `RS256`
+** Click the button *CREATE*
+
+Once the API is created you'll get a `client_id` and a `client_secret` for it. Navigate to the *Test* tab to find out the details.
+
+== Working with Developer Secrets
+
+The API and integration tests work with developer secrets to avoid having secrets in code. 
+
+* To define the secrets open a terminal and navigate to the `api` folder
+* Initialize the user secrets manager
++
+[source]
+--
+$ dotnet user-secrets init
+--
+
+* Add the 4 necessary secrets:
++
+[source]
+--
+$ dotnet user-secrets set "auth0:url" "<url to token provider>"
+$ dotnet user-secrets set "auth0:client_id" "<client-id>"
+$ dotnet user-secrets set "auth0:client_secret" "<client-secret>"
+$ dotnet user-secrets set "auth0:audience" "<audience>"
+--
+
+== Getting a Token
+
+To get a token from Auth0 use the following command:
+
+[source,bash]
+--
+curl --request POST \
+  --url https://<tenant>.eu.auth0.com/oauth/token \
+  --header 'content-type: application/json' \
+  --data '{"client_id":"<client-id>","client_secret":"<client-secret>","audience":"<audience>","grant_type":"client_credentials"}'
+--
+
+== Testing the API
+
+* To get a list of all glossary items use (endpoint not secured):
++
+[source,bash]
+--
+curl --insecure https://localhost:5001/api/glossary
+--
+
+* To get a specific glossary item by its `term` use (endpoint not secured):
++
+[source,bash]
+--
+curl --insecure https://localhost:5001/api/glossary/<term>
+--
+
+* To create a new glossary item use:
++
+[source,bash]
+--
+curl --insecure --request POST \
+    --header 'content-type: application/json' \
+    --header 'Authorization: Bearer <token>' \
+    --data '<data>' \
+    --url https://localhost:5001/api/glossary
+--
++
+Where `<token>` is the token requested in the previous section.
+
+* To update a specific glossary item use:
++
+[source,bash]
+--
+curl --insecure --request PUT \
+    --header 'content-type: application/json' \
+    --header 'Authorization: Bearer <token>' \
+    --data '<data>' \
+    --url https://localhost:5001/api/glossary
+--
+
+* To delete a specific glossary item use:
++
+[source,bash]
+--
+curl --insecure --request DELETE \
+    --header 'content-type: application/json' \
+    --header 'Authorization: Bearer <token>' \
+    --url https://localhost:5001/api/glossary/<term>
+--
