@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using api;
 using Xunit;
 
@@ -20,8 +20,10 @@ namespace tests
         {
             var response = await client.GetAsync("glossary");
 
-            var data = await JsonSerializer.DeserializeAsync<IEnumerable<GlossaryItem>>(response.Content.ReadAsStreamAsync().Result);
+            var json = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<IEnumerable<GlossaryItem>>(json);
             Assert.True(data.Count() > 0);
+            Assert.Equal("AccessToken", data.First().Term);
         }
 
         [Fact]
@@ -29,7 +31,8 @@ namespace tests
         {
             var response = await client.GetAsync("glossary/accesstoken");
 
-            var data = await JsonSerializer.DeserializeAsync<GlossaryItem>(response.Content.ReadAsStreamAsync().Result);
+            var json = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<GlossaryItem>(json);
             Assert.NotNull(data);
         }
         
