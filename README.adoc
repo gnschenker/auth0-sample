@@ -1,5 +1,20 @@
 = API Secured with Auth0
 
+Sample code showing how to test an API that has been secured using Auth0. Three types of tests are showcased:
+
+* .NET Core 3.1 based integration tests using the xUnit template. The tests are using test tokens procured from Auth0
+* .NET Core 3.1 based integration tests using fake JWT Bearer tokens
+* Jasmine and Node JS based outside-in tests using test tokens procured from Auth0
+
+[NOTE]
+====
+This repository requires the use of .NET Core `3.1.100` or higher! Test with
+
+    dotnet --version
+    
+If your version is older or you don't have .NET Core installed, then get it from here: https://dotnet.microsoft.com/download
+====
+
 == Create an Account on Auth0
 
 First you need an account on Auth0. You can create a free personal account here: https://auth0.com/signup.
@@ -122,6 +137,15 @@ Before continuing make sure you have defined User Secrets as described above.
 [source]
 --
 $ dotnet test tests
+--
+
+== Running the XUnit Test with fake JWT Bearer tokens
+
+* To run Xunit based tests that use fake JWT Bearer tokens, use the following command:
++
+[source]
+--
+$ dotnet test tests-with-fake-tokens
 --
 
 == Running Outside-In Tests
