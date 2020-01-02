@@ -13,20 +13,18 @@ namespace tests_with_fake_tokens
 {
     public class GlossaryControllerTests : ControllerTestsBase
     {
-        public GlossaryControllerTests(WebApiTesterFactory factory) : base(factory)
-        {
-        }
+        public GlossaryControllerTests(WebApiTesterFactory factory) : base(factory) { }
 
         [Fact]
         public async Task should_return_list_of_glossary_items_without_need_for_token()
         {
             var response = await client.GetAsync("/api/glossary");
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var json = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<IEnumerable<GlossaryItem>>(json);
-            Assert.True(data.Count() > 0);
-            Assert.Equal("AccessToken", data.First().Term);
+            data.Count().Should().BeGreaterThan(0);
+            data.First().Term.Should().Be("AccessToken");
         }
 
         [Fact]
@@ -34,32 +32,35 @@ namespace tests_with_fake_tokens
         {
             var response = await client.GetAsync("/api/glossary/accesstoken");
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var json = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<GlossaryItem>(json);
-            Assert.NotNull(data);
-            Assert.Equal("AccessToken", data.Term);
+            data.Should().NotBeNull();
+            data.Term.Should().Be("AccessToken");
         }
 
         [Fact]
         public async Task should_throw_unauthorized_if_token_is_not_provided_upon_create()
         {
             var response = await client.PostAsync("/api/glossary", null);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
         public async Task should_throw_unauthorized_if_token_is_not_provided_upon_update()
         {
             var response = await client.PutAsync("/api/glossary", null);
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
         public async Task should_throw_unauthorized_if_token_is_not_provided_upon_delete()
         {
             var response = await client.DeleteAsync("/api/glossary/jwt");
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
