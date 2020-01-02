@@ -21,8 +21,8 @@ describe("Suite to test the glossary API", () => {
             "Content-Type": "application/json"
         }
     });
-
-    describe("when calling /glossary", () => {
+    
+    describe("when calling /glossary [GET]", () => {
         it("should return list of glossaries", async () => {
             const response = await client.get('glossary');
             expect(response.status).toBe(200);
@@ -30,12 +30,33 @@ describe("Suite to test the glossary API", () => {
             expect(response.data[0].term).toBe('AccessToken');
         }) 
     });
-
-    describe("when calling /glossary/jwt", () => {
+    
+    describe("when calling /glossary/jwt [GET]", () => {
         it("should return glossary", async () => {
             const response = await client.get('glossary/jwt');
             expect(response.status).toBe(200);
             expect(response.data.term.toLowerCase()).toBe('jwt');
+        });
+    });
+
+    describe("when callig /glossary/<term> [DELETE] without token", () => {
+        it("should fail with error Unauthorized (401)", async () => {
+            await expectAsync(client.delete('glossary/jwt'))
+                .toBeRejectedWith(new Error("Request failed with status code 401"));
+        });
+    });
+
+    describe("when callig /glossary [POST] without token", () => {
+        it("should fail with error Unauthorized (401)", async () => {
+            await expectAsync(client.post('glossary'))
+                .toBeRejectedWith(new Error("Request failed with status code 401"));
+        });
+    });
+
+    describe("when callig /glossary [PUT] without token", () => {
+        it("should fail with error Unauthorized (401)", async () => {
+            await expectAsync(client.put('glossary'))
+                .toBeRejectedWith(new Error("Request failed with status code 401"));
         });
     });
 
