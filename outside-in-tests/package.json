@@ -9,7 +9,7 @@
   "author": "Gabriel Schenker",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "config-js": "^1.1.13",
     "jasmine": "^3.5.0",
     "nodemon": "^2.0.2",
